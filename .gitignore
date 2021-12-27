@@ -1,1 +1,5 @@
 *.pdf
+*.pyc
+data/*
+!data/Infocom06
+!data/RolleNet
