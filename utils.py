@@ -23,3 +23,17 @@ def format_file(filename):
     delta = np.min(contacts[:, 3])
     contacts[:, (2, 3)] -= delta
     np.savetxt(filename+"_formatted", contacts, fmt="%s")
+
+
+def convert2splitted(filename):
+    contacts = parse_data(filename)
+    zeros = np.zeros((contacts.shape[0], 1), dtype=int)
+    creation = np.concatenate((contacts[:, (2, 0, 1)], zeros), axis=1)
+    suppression = np.concatenate((contacts[:, (3, 0, 1)], zeros+1), axis=1)
+    suppression[:, 0] += 1
+    merged = np.concatenate((creation, suppression), axis=0)
+    merged = merged[merged[:, 0].argsort()]
+    with open(filename+"_splitted", 'w') as f:
+        for i in range(merged.shape[0]):
+            f.write(
+                f"{merged[i,0]} {merged[i,1]} {merged[i,2]} {'C' if merged[i,3]==0 else 'S'}\n")

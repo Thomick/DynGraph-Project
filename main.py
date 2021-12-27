@@ -21,3 +21,10 @@ if __name__ == "__main__":
     format_file("data/Infocom06")
     print("    Formatting RollerNet -> RollerNet_formatted")
     format_file("data/RollerNet")
+
+    ######### EX 3 ############
+    print("Exercise 3 :")
+    print("    Converting Infocom06 -> Infocom06_splitted")
+    convert2splitted("data/Infocom06")
+    print("    Converting RollerNet -> RollerNet_splitted")
+    convert2splitted("data/RollerNet")
