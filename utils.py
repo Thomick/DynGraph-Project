@@ -15,9 +15,9 @@ def parse_splitted_data(filename):
     contacts = []
     with open(filename, 'r') as f:
         for line in f.readlines():
-            n1, n2, ts, te = line.split(sep=" ")
-            te = 0 if te == "C" else 1
-            contacts.append([int(n1), int(n2), int(ts), int(te)])
+            t, n1, n2, a = line.split(sep=" ")
+            a = 0 if a[0] == "C" else 1
+            contacts.append([int(t), int(n1), int(n2), int(a)])
     return np.array(contacts, dtype=int)
 
 
@@ -58,6 +58,19 @@ def get_intercontact_duration(contacts):
     return inter_duration
 
 
-def plot_distrib(data):
+def plot_distrib(data,title=""):
     plt.hist(data,200)
+    plt.title(title)
     plt.show()
+
+def get_avg_degree(contacts_splitted):
+    last = 0
+    degrees = [0]
+    timesteps = [0]
+    for i in range(contacts_splitted.shape[0]):
+        if contacts_splitted[i][0] != timesteps[-1]:
+            degrees.append(degrees[-1])
+            timesteps.append(contacts_splitted[i][0])
+        degrees[-1] += 1-2*contacts_splitted[i][3]
+    nb_node = len(set.union(set(contacts_splitted[:, 1]), set(contacts_splitted[:, 2])))
+    return np.array(timesteps),np.array(degrees)/nb_node
