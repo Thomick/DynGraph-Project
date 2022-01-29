@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def parse_raw_data(filename):
     contacts = []
     with open(filename, 'r') as f:
@@ -64,13 +63,36 @@ def plot_distrib(data,title=""):
     plt.show()
 
 def get_avg_degree(contacts_splitted):
-    last = 0
-    degrees = [0]
-    timesteps = [0]
-    for i in range(contacts_splitted.shape[0]):
-        if contacts_splitted[i][0] != timesteps[-1]:
-            degrees.append(degrees[-1])
-            timesteps.append(contacts_splitted[i][0])
-        degrees[-1] += 1-2*contacts_splitted[i][3]
+    duration = int(np.max(contacts_splitted[:, 0]) - np.min(contacts_splitted[:, 0]))
+    degrees = [0]*duration
+    current_total_degree = 0
+    current_entry = 0
+    for i in range(duration):
+        while current_entry < contacts_splitted.shape[0] and contacts_splitted[current_entry,0] <= i:
+            current_total_degree += 2 - 4*contacts_splitted[current_entry,3]
+            current_entry += 1
+        degrees[i] = current_total_degree
     nb_node = len(set.union(set(contacts_splitted[:, 1]), set(contacts_splitted[:, 2])))
-    return np.array(timesteps),np.array(degrees)/nb_node
+    return np.array(degrees)/nb_node
+
+def get_created_deleted_fraction(contacts_splitted):
+    duration = int(np.max(contacts_splitted[:, 0]) - np.min(contacts_splitted[:, 0]))
+    nb_node = len(set.union(set(contacts_splitted[:, 1]), set(contacts_splitted[:, 2])))
+    max_edge_count = int(nb_node*(nb_node-1)/2)
+    current_edge_count = 0
+    fraction_created = [-1]*duration
+    fraction_deleted = [-1]*duration
+    current_entry = 0
+    for i in range(duration):
+        deleted = 0
+        created = 0
+        while current_entry < contacts_splitted.shape[0] and contacts_splitted[current_entry,0] <= i:
+            deleted += contacts_splitted[current_entry,3]
+            created += 1 - contacts_splitted[current_entry,3]
+            current_entry += 1
+        if current_edge_count != max_edge_count:
+            fraction_created[i] = created/(max_edge_count-current_edge_count)
+        if current_edge_count != 0:
+            fraction_deleted[i] = deleted/current_edge_count
+        current_edge_count += created - deleted
+    return fraction_created,fraction_deleted
