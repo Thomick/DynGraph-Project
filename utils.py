@@ -1,5 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+
+def progressbar(it, prefix="", size=60, file=sys.stdout):
+    count = len(it)
+    def show(j):
+        x = int(size*j/count)
+        file.write("%s[%s%s] %i/%i\r" % (prefix, "#"*x, "."*(size-x), j, count))
+        file.flush()        
+    show(0)
+    for i, item in enumerate(it):
+        yield item
+        show(i+1)
+    file.write("\n")
+    file.flush()
 
 def parse_raw_data(filename):
     contacts = []
@@ -34,6 +48,11 @@ def format_file(filename):
     contacts[:, (2, 3)] -= delta
     np.savetxt(filename+"_formatted", contacts, fmt="%s")
 
+def save_splitted(filename,contacts):
+    with open(filename, 'w') as f:
+        for i in range(contacts.shape[0]):
+            f.write(
+                f"{contacts[i,0]} {contacts[i,1]} {contacts[i,2]} {'C' if contacts[i,3]==0 else 'S'}\n")
 
 def convert2splitted(filename):
     contacts = parse_raw_data(filename)
@@ -43,10 +62,8 @@ def convert2splitted(filename):
     suppression[:, 0] += 1
     merged = np.concatenate((creation, suppression), axis=0)
     merged = merged[merged[:, 0].argsort()]
-    with open(filename+"_splitted", 'w') as f:
-        for i in range(merged.shape[0]):
-            f.write(
-                f"{merged[i,0]} {merged[i,1]} {merged[i,2]} {'C' if merged[i,3]==0 else 'S'}\n")
+    save_splitted(filename+"_splitted",merged)
+    
 
 
 def get_intercontact_duration(contacts):

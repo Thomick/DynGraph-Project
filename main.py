@@ -1,6 +1,9 @@
 from utils import *
 import numpy as np
 import matplotlib.pyplot as plt
+from model_generation import *
+
+generate_new_models = True # Set to false to speed up the execution
 
 if __name__ == "__main__":
     ######## EX 1 #############
@@ -54,6 +57,7 @@ if __name__ == "__main__":
     plt.plot(avg_degree)
     plt.title("Evolution of average degree for Infocom6")
     plt.xlabel("Time")
+    plt.ylabel("Average degree")
     plt.show()
     print("    Plotting evolution of average degree for RollerNet ...")
     contacts = parse_splitted_data("data/RollerNet_formatted_splitted")
@@ -61,15 +65,71 @@ if __name__ == "__main__":
     plt.plot(avg_degree)
     plt.title("Evolution of average degree for RollerNet")
     plt.xlabel("Time")
+    plt.ylabel("Average degree")
     plt.show()
 
-    ########## EX 7 ##############
+    ########## EX 8 ##############
     print("Exercise 8 :")
     contacts = parse_splitted_data("data/Infocom06_formatted_splitted")
     print("    Computing fraction of created links and fraction of deleted links for Infocom06")
-    created, deleted = get_created_deleted_fraction(contacts)
+    created_infocom, deleted_infocom = get_created_deleted_fraction(contacts)
     print("    Saving fraction of created links for Infocom06 in data/Infocom06_created...")
-    np.savetxt("data/Infocom06_created", created)
+    np.savetxt("data/Infocom06_created", created_infocom)
     print("    Saving fraction of deleted links for Infocom06 in data/Infocom06_deleted...")
-    np.savetxt("data/Infocom06_deleted", deleted)
+    np.savetxt("data/Infocom06_deleted", deleted_infocom)
+    contacts = parse_splitted_data("data/RollerNet_formatted_splitted")
+    print("    Computing fraction of created links and fraction of deleted links for RollerNet")
+    created_rollernet, deleted_rollernet = get_created_deleted_fraction(contacts)
+    print("    Saving fraction of created links for RollerNet in data/RollerNet_created...")
+    np.savetxt("data/RollerNet_created", created_rollernet)
+    print("    Saving fraction of deleted links for RollerNet in data/RollerNet_deleted...")
+    np.savetxt("data/RollerNet_deleted", deleted_rollernet)
 
+    ########## EX 9 ############## -> See model_generation.py
+    ########## EX 10 ##############
+    print("Exercise 10 :")
+    print("    Edge markovian parameters for Infocom06 :")
+    p,d = np.mean(created_infocom),np.mean(deleted_infocom)
+    print("        Probability that a new link is created p :",p)
+    print("        Probability that an existing link is deleted d :",d)
+    print("        Number of nodes :", nb_node_info)
+    print("        Number of time steps :",duration_info)
+    if generate_new_models:
+        print("    Generating model ...")
+        contacts_model = generate_edge_markovian(nb_node_info, p, d, duration_info)
+        save_splitted("data/Infocom06_markovian_model", contacts_model)
+    print("    Plotting evolution of average degree ...")
+    contacts_model = parse_splitted_data("data/Infocom06_markovian_model")
+    contacts = parse_splitted_data("data/Infocom06_formatted_splitted")
+    avg_degree = get_avg_degree(contacts)
+    avg_degree_model = get_avg_degree(contacts_model)
+    plt.plot(avg_degree,label="Infocom06")
+    plt.plot(avg_degree_model,label="Edge-Markovian model")
+    plt.title("Evolution of average degree")
+    plt.xlabel("Time")
+    plt.ylabel("Average degree")
+    plt.legend()
+    plt.show()
+
+    print("    Edge markovian parameters for Rollernet :")
+    p,d = np.mean(created_rollernet),np.mean(deleted_rollernet)
+    print("        Probability that a new link is created p :",p)
+    print("        Probability that an existing link is deleted d :",d)
+    print("        Number of nodes :", nb_node_roller)
+    print("        Number of time steps :",duration_roller)
+    if generate_new_models:
+        print("    Generating model ...")
+        contacts_model = generate_edge_markovian(nb_node_roller, p, d, duration_roller)
+        save_splitted("data/Rollernet_markovian_model", contacts_model)
+    print("    Plotting evolution of average degree ...")
+    contacts_model = parse_splitted_data("data/Rollernet_markovian_model")
+    contacts = parse_splitted_data("data/Rollernet_formatted_splitted")
+    avg_degree = get_avg_degree(contacts)
+    avg_degree_model = get_avg_degree(contacts_model)
+    plt.plot(avg_degree,label="Rollernet")
+    plt.plot(avg_degree_model,label="Edge-Markovian model")
+    plt.title("Evolution of average degree")
+    plt.xlabel("Time")
+    plt.ylabel("Average degree")
+    plt.legend()
+    plt.show()
