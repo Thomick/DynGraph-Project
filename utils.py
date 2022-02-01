@@ -44,7 +44,7 @@ def datainfo(filename):
 
 def format_file(filename):
     contacts = parse_raw_data(filename)
-    delta = np.min(contacts[:, 3])
+    delta = np.min(contacts[:, 2])
     contacts[:, (2, 3)] -= delta
     np.savetxt(filename+"_formatted", contacts, fmt="%s")
 
@@ -70,46 +70,12 @@ def get_intercontact_duration(contacts):
     inter_duration = []
     for i in range(contacts.shape[0]-1):
         if contacts[i+1, 0] == contacts[i, 0] and contacts[i+1, 1] == contacts[i, 1]:
-            inter_duration.append(contacts[i+1, 2]-contacts[i, 3]-1)
+            intercontact = contacts[i+1, 2]-contacts[i, 3]-1
+            inter_duration.append(intercontact)
     return inter_duration
 
 
-def plot_distrib(data,title=""):
-    plt.hist(data,200)
+def plot_distrib(data,title="",nb_bucket = 200,range=None):
+    plt.hist(data,nb_bucket,range=range)
     plt.title(title)
-    plt.show()
-
-def get_avg_degree(contacts_splitted):
-    duration = int(np.max(contacts_splitted[:, 0]) - np.min(contacts_splitted[:, 0]))
-    degrees = [0]*duration
-    current_total_degree = 0
-    current_entry = 0
-    for i in range(duration):
-        while current_entry < contacts_splitted.shape[0] and contacts_splitted[current_entry,0] <= i:
-            current_total_degree += 2 - 4*contacts_splitted[current_entry,3]
-            current_entry += 1
-        degrees[i] = current_total_degree
-    nb_node = len(set.union(set(contacts_splitted[:, 1]), set(contacts_splitted[:, 2])))
-    return np.array(degrees)/nb_node
-
-def get_created_deleted_fraction(contacts_splitted):
-    duration = int(np.max(contacts_splitted[:, 0]) - np.min(contacts_splitted[:, 0]))
-    nb_node = len(set.union(set(contacts_splitted[:, 1]), set(contacts_splitted[:, 2])))
-    max_edge_count = int(nb_node*(nb_node-1)/2)
-    current_edge_count = 0
-    fraction_created = [-1]*duration
-    fraction_deleted = [-1]*duration
-    current_entry = 0
-    for i in range(duration):
-        deleted = 0
-        created = 0
-        while current_entry < contacts_splitted.shape[0] and contacts_splitted[current_entry,0] <= i:
-            deleted += contacts_splitted[current_entry,3]
-            created += 1 - contacts_splitted[current_entry,3]
-            current_entry += 1
-        if current_edge_count != max_edge_count:
-            fraction_created[i] = created/(max_edge_count-current_edge_count)
-        if current_edge_count != 0:
-            fraction_deleted[i] = deleted/current_edge_count
-        current_edge_count += created - deleted
-    return fraction_created,fraction_deleted
+    #plt.show()
