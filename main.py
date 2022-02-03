@@ -156,6 +156,7 @@ if __name__ == "__main__":
 
     ########## EX 12 ##############
     # Distribution of average degree
+    print("Distribution of average degree")
     contacts = parse_splitted_data("data/Infocom06_formatted_splitted")
     mean_degrees = get_node_avg_degree(contacts)
     plt.xlabel("Average degree")
@@ -176,6 +177,7 @@ if __name__ == "__main__":
 
 
     # Unique moving nodes count
+    print("Unique moving nodes count")
     '''
     contacts = parse_splitted_data("data/Infocom06_formatted_splitted")
     contacts_model = parse_splitted_data("data/Infocom06_markovian_model")
@@ -197,6 +199,7 @@ if __name__ == "__main__":
     plt.show()
 
     # Unique meeting count
+    print("Unique meeting count")
     '''
     contacts = parse_splitted_data("data/Infocom06_formatted_splitted")
     contacts_model = parse_splitted_data("data/Infocom06_markovian_model")
@@ -225,6 +228,7 @@ if __name__ == "__main__":
     plt.show()
 
     # Distribution of average fraction of created and deleted links for each nodes
+    print("Distribution of average fraction of created and deleted links for each nodes")
     '''
     contacts = parse_splitted_data("data/Infocom06_formatted_splitted")
     contacts_model = parse_splitted_data("data/Infocom06_markovian_model")
@@ -267,14 +271,15 @@ if __name__ == "__main__":
 
 
     # Neighborhood dependent model
+    print("Neighborhood dependent model")
     contacts = parse_splitted_data("data/RollerNet_formatted_splitted")
     contacts_model = parse_splitted_data("data/RollerNet_markovian_model")
 
     fraction_created_con,fraction_deleted_con,fraction_created_dis,fraction_deleted_dis = get_created_deleted_fraction_wconnection(contacts)
     fraction_created_con_model,fraction_deleted_con_model,fraction_created_dis_model,fraction_deleted_dis_model = get_created_deleted_fraction_wconnection(contacts_model)
-    print("Rollernet")
-    print(f"Data: fraction_created_con {np.mean(fraction_created_con[fraction_created_con>=0])},fraction_deleted_con {np.mean(fraction_deleted_con[fraction_deleted_con>=0])},fraction_created_dis {np.mean(fraction_created_dis[fraction_created_dis>=0])},fraction_deleted_dis {np.mean(fraction_deleted_dis[fraction_deleted_dis>=0])}")
-    print(f"Markovian model: fraction_created_con {np.mean(fraction_created_con_model[fraction_created_con_model>=0])},fraction_deleted_con {np.mean(fraction_deleted_con_model[fraction_deleted_con_model>=0])},fraction_created_dis {np.mean(fraction_created_dis_model[fraction_created_dis_model>=0])},fraction_deleted_dis {np.mean(fraction_deleted_dis_model[fraction_deleted_dis_model>=0])}")
+    print("    Rollernet")
+    print(f"        Data: fraction_created_con {np.mean(fraction_created_con[fraction_created_con>=0])},fraction_deleted_con {np.mean(fraction_deleted_con[fraction_deleted_con>=0])},fraction_created_dis {np.mean(fraction_created_dis[fraction_created_dis>=0])},fraction_deleted_dis {np.mean(fraction_deleted_dis[fraction_deleted_dis>=0])}")
+    print(f"        Markovian model: fraction_created_con {np.mean(fraction_created_con_model[fraction_created_con_model>=0])},fraction_deleted_con {np.mean(fraction_deleted_con_model[fraction_deleted_con_model>=0])},fraction_created_dis {np.mean(fraction_created_dis_model[fraction_created_dis_model>=0])},fraction_deleted_dis {np.mean(fraction_deleted_dis_model[fraction_deleted_dis_model>=0])}")
     if generate_new_models:
         print("    Generating model ...")
         p_con = np.mean(fraction_created_con[fraction_created_con>=0])
@@ -332,6 +337,7 @@ if __name__ == "__main__":
     '''
 
     # Time dependent model
+    print("Time dependent model")
     contacts = parse_splitted_data("data/RollerNet_formatted_splitted")
     contacts_model = parse_splitted_data("data/RollerNet_markovian_model")
 
@@ -353,6 +359,7 @@ if __name__ == "__main__":
     plt.legend()
     plt.show()
 
+    print("    Plotting distribution of average degrees ...")
     contacts = parse_splitted_data("data/RollerNet_formatted_splitted")
     mean_degrees = get_node_avg_degree(contacts)
     plt.xlabel("Average degree")
