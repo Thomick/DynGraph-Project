@@ -1,6 +1,14 @@
 import numpy as np
 import utils
 
+def get_intercontact_duration(contacts):
+    inter_duration = []
+    for i in range(contacts.shape[0]-1):
+        if contacts[i+1, 0] == contacts[i, 0] and contacts[i+1, 1] == contacts[i, 1]:
+            intercontact = contacts[i+1, 2]-contacts[i, 3]-1
+            inter_duration.append(intercontact)
+    return inter_duration
+
 def get_avg_degree(contacts_splitted):
     duration = int(np.max(contacts_splitted[:, 0]) - np.min(contacts_splitted[:, 0]))
     degrees = [0]*duration
@@ -107,9 +115,9 @@ def get_created_deleted_fraction_wconnection(contacts_splitted):
     fraction_created_dis = [-1]*duration
     fraction_deleted_dis = [-1]*duration
     current_entry = 0
-    for i in range(duration):
+    for i in utils.progressbar( range(duration)):
         current_graph_2 = np.matmul(current_graph,current_graph)
-        available_con_2 = np.logical_and(current_graph_2>0,current_graph==0).sum()/2
+        available_con_2 = np.logical_and(current_graph_2>0,np.logical_not(current_graph>0)).sum()/2
         con_link_count = (current_graph_2>0).sum()/2 - available_con_2
         deleted_con = 0
         created_con = 0

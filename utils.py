@@ -66,16 +66,9 @@ def convert2splitted(filename):
     
 
 
-def get_intercontact_duration(contacts):
-    inter_duration = []
-    for i in range(contacts.shape[0]-1):
-        if contacts[i+1, 0] == contacts[i, 0] and contacts[i+1, 1] == contacts[i, 1]:
-            intercontact = contacts[i+1, 2]-contacts[i, 3]-1
-            inter_duration.append(intercontact)
-    return inter_duration
 
-
-def plot_distrib(data,title="",nb_bucket = 200,range=None):
+def plot_distrib(data,title="",nb_bucket = 200,range=None,show=True):
     plt.hist(data,nb_bucket,range=range)
     plt.title(title)
-    #plt.show()
+    if show:
+        plt.show()

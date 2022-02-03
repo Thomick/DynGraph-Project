@@ -2,4 +2,7 @@
 *.pyc
 data/*
 !data/Infocom06
-!data/RolleNet
+!data/RollerNet
+!data/RollerNet*model
+!data/Infocom06*model
+!Report.pdf
