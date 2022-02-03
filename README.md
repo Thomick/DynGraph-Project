@@ -1,5 +1,7 @@
 # DynGraph-Project
 Project for the IA/ML for network modeling course
+
+Author of the code and the report : Thomas MICHEL
 ********
 The present practical work consists in the analysis of different properties of mobile networks and the comparison of these properties with evolving graphs models. The two datasets that are used are RollerNet and Infocom06.
 ********

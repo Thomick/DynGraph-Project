@@ -1,3 +1,5 @@
+# Code written by Thomas MICHEL
+
 from utils import *
 import numpy as np
 import matplotlib.pyplot as plt

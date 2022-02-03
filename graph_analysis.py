@@ -1,3 +1,5 @@
+# Code written by Thomas MICHEL
+
 import numpy as np
 import utils
 
